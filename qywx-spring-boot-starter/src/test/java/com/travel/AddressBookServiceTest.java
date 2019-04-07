@@ -164,4 +164,6 @@ public class AddressBookServiceTest extends BaseTest {
         List<Tag> tags = weChatManager.addressBookService().getTagList("address-book");
         logger.info("标签总数：{}",tags.size());
     }
+
+
 }
