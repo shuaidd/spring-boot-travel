@@ -1,6 +1,7 @@
 package com.travel.qywx.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.travel.qywx.enums.ButtonType;
 
 import java.util.List;
 import java.util.StringJoiner;
@@ -13,18 +14,18 @@ import java.util.StringJoiner;
  **/
 public class ApplicationButton {
 
-    private String type;
+    private ButtonType type;
     private String name;
     private String key;
     private String url;
     @JsonProperty("sub_button")
     private List<ApplicationButton> subButton;
 
-    public String getType() {
+    public ButtonType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ButtonType type) {
         this.type = type;
     }
 

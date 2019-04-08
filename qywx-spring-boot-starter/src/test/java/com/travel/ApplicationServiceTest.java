@@ -1,6 +1,7 @@
 package com.travel;
 
 import com.travel.qywx.dto.ApplicationButton;
+import com.travel.qywx.enums.ButtonType;
 import com.travel.qywx.response.ApplicationButtonResponse;
 import com.travel.qywx.response.WeChatApplicationResponse;
 import com.travel.qywx.resquest.ApplicationButtonRequest;
@@ -27,7 +28,7 @@ public class ApplicationServiceTest extends BaseTest {
         ApplicationButtonRequest request = new ApplicationButtonRequest();
         ApplicationButton applicationButton = new ApplicationButton();
         applicationButton.setKey("test-click");
-        applicationButton.setType("click");
+        applicationButton.setType(ButtonType.CLICK);
         applicationButton.setName("测试点击");
         request.setButtonList(Collections.singletonList(applicationButton));
         weChatManager.applicationService().createApplicationButton(request,"1000004", "reporter");

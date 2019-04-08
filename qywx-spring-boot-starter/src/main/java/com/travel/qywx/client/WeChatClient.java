@@ -384,4 +384,50 @@ public interface WeChatClient {
      */
     @GetMapping(value = "menu/delete", headers = HEAD)
     BaseResponse deleteApplicationButtons(@RequestParam("agentid") String agentid, @RequestParam(HEAD_KEY) String app);
+
+    /**
+     * 发送消息
+     *
+     * @param request
+     * @param app
+     * @return
+     */
+    @PostMapping(value = "message/send", headers = HEAD)
+    SendMessageResponse sendMessage(SendMessageRequest request, @RequestParam(HEAD_KEY) String app);
+
+    /**
+     * 创建群聊会话
+     * @param request
+     * @param app
+     * @return
+     */
+    @PostMapping(value = "appchat/create", headers = HEAD)
+    CreateAppChatResponse createAppChat(CreateAppChatRequest request,@RequestParam(HEAD_KEY) String app);
+
+    /**
+     * 修改群聊会话
+     * @param request
+     * @param app
+     * @return
+     */
+    @PostMapping(value = "appchat/update", headers = HEAD)
+    BaseResponse updateAppChat(UpdateAppChatRequest request,@RequestParam(HEAD_KEY) String app);
+
+    /**
+     * 获取群聊会话
+     * @param chatId
+     * @param app
+     * @return
+     */
+    @GetMapping(value = "appchat/get", headers = HEAD)
+    SearchAppChatResponse searchAppChat(@RequestParam("chatid") String chatId, @RequestParam(HEAD_KEY) String app);
+
+    /**
+     * 发送群消息
+     * @param request
+     * @param app
+     * @return
+     */
+    @PostMapping(value = "appchat/send", headers = HEAD)
+    BaseResponse sendAppChatMessage(SendAppChatRequest request,@RequestParam(HEAD_KEY) String app);
 }
