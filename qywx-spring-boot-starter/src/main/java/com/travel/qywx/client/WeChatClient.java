@@ -336,10 +336,52 @@ public interface WeChatClient {
 
     /**
      * 获取应用
+     *
      * @param agentId
      * @param app
      * @return
      */
     @GetMapping(value = "agent/get", headers = HEAD)
     WeChatApplicationResponse getApplication(@RequestParam("agentid") String agentId, @RequestParam(HEAD_KEY) String app);
+
+    /**
+     * 设置应用
+     *
+     * @param reuqest
+     * @param app
+     * @return
+     */
+    @PostMapping(value = "agent/set", headers = HEAD)
+    BaseResponse applicationSetting(ApplicationSettingReuqest reuqest, @RequestParam(HEAD_KEY) String app);
+
+    /**
+     * 创建菜单
+     *
+     * @param request
+     * @param agentid
+     * @param app
+     * @return
+     */
+    @PostMapping(value = "menu/create", headers = HEAD)
+    BaseResponse createApplicationButton(ApplicationButtonRequest request, @RequestParam("agentid") String agentid, @RequestParam(HEAD_KEY) String app);
+
+    /**
+     * 获取菜单
+     *
+     * @param agentid
+     * @param app
+     * @return
+     */
+    @GetMapping(value = "menu/get", headers = HEAD)
+    ApplicationButtonResponse getApplicationButtons(@RequestParam("agentid") String agentid, @RequestParam(HEAD_KEY) String app);
+
+    /**
+     * 删除菜单
+     *
+     * @param agentid
+     * @param app
+     * @return
+     */
+    @GetMapping(value = "menu/delete", headers = HEAD)
+    BaseResponse deleteApplicationButtons(@RequestParam("agentid") String agentid, @RequestParam(HEAD_KEY) String app);
 }

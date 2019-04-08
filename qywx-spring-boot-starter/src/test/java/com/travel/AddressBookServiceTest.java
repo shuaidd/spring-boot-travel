@@ -5,11 +5,7 @@ import com.travel.qywx.dto.WeChatUser;
 import com.travel.qywx.response.AsyncJobResultResponse;
 import com.travel.qywx.response.QueryTagUserResponse;
 import com.travel.qywx.resquest.*;
-import com.travel.qywx.support.WeChatManager;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,9 +17,6 @@ import java.util.List;
  * @date 2019-04-04 16:46
  **/
 public class AddressBookServiceTest extends BaseTest {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private WeChatManager weChatManager;
 
     @Test
     public void createUser() {

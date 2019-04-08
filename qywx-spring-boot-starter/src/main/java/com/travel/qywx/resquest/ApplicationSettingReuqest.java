@@ -1,9 +1,6 @@
-package com.travel.qywx.response;
+package com.travel.qywx.resquest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.travel.qywx.dto.AllowParty;
-import com.travel.qywx.dto.AllowTag;
-import com.travel.qywx.dto.AllowUser;
 
 import java.util.StringJoiner;
 
@@ -11,21 +8,16 @@ import java.util.StringJoiner;
  * 描述
  *
  * @author ddshuai
- * @date 2019-04-06 22:17
+ * @date 2019-04-08 16:03
  **/
-public class WeChatApplicationResponse extends AbstractBaseResponse {
+public class ApplicationSettingReuqest {
 
     @JsonProperty("agentid")
     private String agentId;
 
     private String name;
 
-    @JsonProperty("square_logo_url")
-    private String squareLogoUrl;
-
     private String description;
-
-    private Integer close;
 
     @JsonProperty("redirect_domain")
     private String redirectDomain;
@@ -36,14 +28,11 @@ public class WeChatApplicationResponse extends AbstractBaseResponse {
     @JsonProperty("home_url")
     private String homeUrl;
 
-    @JsonProperty("allow_userinfos")
-    private AllowUser allowUser;
+    @JsonProperty("report_location_flag")
+    private Integer reportLocationFlag;
 
-    @JsonProperty("allow_partys")
-    private AllowParty allowParty;
-
-    @JsonProperty("allow_tags")
-    private AllowTag allowTag;
+    @JsonProperty("logo_mediaid")
+    private String logoMediaId;
 
     public String getAgentId() {
         return agentId;
@@ -61,28 +50,12 @@ public class WeChatApplicationResponse extends AbstractBaseResponse {
         this.name = name;
     }
 
-    public String getSquareLogoUrl() {
-        return squareLogoUrl;
-    }
-
-    public void setSquareLogoUrl(String squareLogoUrl) {
-        this.squareLogoUrl = squareLogoUrl;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Integer getClose() {
-        return close;
-    }
-
-    public void setClose(Integer close) {
-        this.close = close;
     }
 
     public String getRedirectDomain() {
@@ -109,44 +82,33 @@ public class WeChatApplicationResponse extends AbstractBaseResponse {
         this.homeUrl = homeUrl;
     }
 
-    public AllowUser getAllowUser() {
-        return allowUser;
+    public Integer getReportLocationFlag() {
+        return reportLocationFlag;
     }
 
-    public void setAllowUser(AllowUser allowUser) {
-        this.allowUser = allowUser;
+    public void setReportLocationFlag(Integer reportLocationFlag) {
+        this.reportLocationFlag = reportLocationFlag;
     }
 
-    public AllowParty getAllowParty() {
-        return allowParty;
+    public String getLogoMediaId() {
+        return logoMediaId;
     }
 
-    public void setAllowParty(AllowParty allowParty) {
-        this.allowParty = allowParty;
-    }
-
-    public AllowTag getAllowTag() {
-        return allowTag;
-    }
-
-    public void setAllowTag(AllowTag allowTag) {
-        this.allowTag = allowTag;
+    public void setLogoMediaId(String logoMediaId) {
+        this.logoMediaId = logoMediaId;
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", WeChatApplicationResponse.class.getSimpleName() + "[", "]")
-                .add("agenId='" + agentId + "'")
+        return new StringJoiner(", ", ApplicationSettingReuqest.class.getSimpleName() + "[", "]")
+                .add("agentId='" + agentId + "'")
                 .add("name='" + name + "'")
-                .add("squareLogoUrl='" + squareLogoUrl + "'")
                 .add("description='" + description + "'")
-                .add("close=" + close)
                 .add("redirectDomain='" + redirectDomain + "'")
                 .add("isReportenter=" + isReportenter)
                 .add("homeUrl='" + homeUrl + "'")
-                .add("allowUser=" + allowUser)
-                .add("allowParty=" + allowParty)
-                .add("allowTag=" + allowTag)
+                .add("reportLocationFlag=" + reportLocationFlag)
+                .add("logoMediaId='" + logoMediaId + "'")
                 .toString();
     }
 }

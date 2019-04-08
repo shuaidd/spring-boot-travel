@@ -1,6 +1,6 @@
 package com.travel;
 
-import com.travel.qywx.service.AuthenticationService;
+import com.travel.qywx.support.WeChatManager;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,11 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date 2019-04-06 21:46
  **/
 public class AuthenticationServiceTest extends BaseTest {
-    @Autowired
-    private AuthenticationService authenticationService;
 
     @Test
     public void get(){
-        authenticationService.getAuthentication("sdss","address-book");
+        weChatManager.authenticationService().getAuthentication("sdss","address-book");
     }
 }

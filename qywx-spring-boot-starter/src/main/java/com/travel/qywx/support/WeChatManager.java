@@ -1,8 +1,7 @@
 package com.travel.qywx.support;
 
 import com.travel.qywx.autoconfigure.WeChatConfigurationProperties;
-import com.travel.qywx.service.AddressBookService;
-import com.travel.qywx.service.TokenService;
+import com.travel.qywx.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,18 +17,29 @@ public class WeChatManager {
     private final AddressBookService addressBookService;
     private final TokenService tokenService;
     private final WeChatConfigurationProperties properties;
+    private final AuthenticationService authenticationService;
+    private final ApplicationService applicationService;
+    private final MediaService mediaService;
 
     @Autowired
-    public WeChatManager(AddressBookService addressBookService, TokenService tokenService, WeChatConfigurationProperties properties) {
+    public WeChatManager(AddressBookService addressBookService,
+                         TokenService tokenService,
+                         WeChatConfigurationProperties properties,
+                         AuthenticationService authenticationService,
+                         ApplicationService applicationService,
+                         MediaService mediaService) {
         this.addressBookService = addressBookService;
         this.tokenService = tokenService;
         this.properties = properties;
+        this.authenticationService = authenticationService;
+        this.applicationService = applicationService;
+        this.mediaService = mediaService;
     }
 
     /**
      * 通讯录管理服务
      *
-     * @return
+     * @return AddressBookService
      */
     public AddressBookService addressBookService() {
         return addressBookService;
@@ -38,7 +48,7 @@ public class WeChatManager {
     /**
      * 令牌管理服务
      *
-     * @return
+     * @return TokenService
      */
     public TokenService tokenService() {
         return tokenService;
@@ -46,10 +56,37 @@ public class WeChatManager {
 
     /**
      * 企业微信配置信息
-     * @return
+     *
+     * @return WeChatConfigurationProperties
      */
-    public WeChatConfigurationProperties properties(){
+    public WeChatConfigurationProperties properties() {
         return properties;
     }
 
+    /**
+     * 身份验证
+     *
+     * @return AuthenticationService
+     */
+    public AuthenticationService authenticationService() {
+        return authenticationService;
+    }
+
+    /**
+     * 素材管理
+     *
+     * @return MediaService
+     */
+    public MediaService mediaService() {
+        return mediaService;
+    }
+
+    /**
+     * 应用管理
+     *
+     * @return ApplicationService
+     */
+    public ApplicationService applicationService() {
+        return applicationService;
+    }
 }

@@ -3,6 +3,7 @@ package com.travel.qywx.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * 描述
@@ -21,5 +22,12 @@ public class AllowTag {
 
     public void setTagIdList(List<Integer> tagIdList) {
         this.tagIdList = tagIdList;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", AllowTag.class.getSimpleName() + "[", "]")
+                .add("tagIdList=" + tagIdList)
+                .toString();
     }
 }
