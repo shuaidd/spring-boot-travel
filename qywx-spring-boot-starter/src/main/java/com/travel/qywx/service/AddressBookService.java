@@ -1,15 +1,26 @@
 package com.travel.qywx.service;
 
+import cn.hutool.core.date.DateUtil;
+import com.travel.qywx.dto.CallbackData;
 import com.travel.qywx.dto.Department;
 import com.travel.qywx.dto.Tag;
 import com.travel.qywx.dto.WeChatUser;
 import com.travel.qywx.response.*;
 import com.travel.qywx.resquest.*;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,6 +32,46 @@ import java.util.Objects;
  **/
 @Service
 public class AddressBookService extends AbstractBaseService {
+
+    /**
+     * 增量更新用户时上传的文件名称
+     */
+    private static final String ASYNC_BATCH_UPDATE_USER_FILE = "asyncBatchUpdateUser-%s.csv";
+
+    /**
+     * 全量覆盖用户时
+     */
+    private static final String FULL_COVER_USER_FILE = "fullCoverUser-%s.csv";
+
+    /**
+     * 批量更新用户
+     */
+    private static final String ASYNC_BATCH_UPDATE_USER = "asyncBatchUpdateUser";
+
+    /**
+     * 全量覆盖用户
+     */
+    private static final String FULL_COVER_USER = "fullCoverUser";
+
+    /**
+     * 更新用户时上传文件的title
+     */
+    private static final String ASYNC_BATCH_UPDATE_USER_FILE_TITLE = "姓名,帐号,手机号,邮箱,所在部门,职位,性别,是否部门内领导,排序,别名,地址,座机,禁用,禁用项说明：(0-启用;1-禁用)\n";
+
+
+    private static final String FULL_COVER_DEPARTMENT_FILE_TITLE = "部门名称,部门ID,父部门ID,排序\n";
+
+    /**
+     * 全量覆盖部门
+     */
+    private static final String FULL_COVER_DEPARTMENT_FILE = "fullCoverUser-%s.csv";
+
+    private final MediaService mediaService;
+
+    @Autowired
+    public AddressBookService(MediaService mediaService) {
+        this.mediaService = mediaService;
+    }
 
     /**
      * 创建用户
@@ -452,5 +503,190 @@ public class AddressBookService extends AbstractBaseService {
         }
 
         return tags;
+    }
+
+    /**
+     * 注意事项：
+     * <p>
+     * 模板中的部门需填写部门ID，多个部门用分号分隔，部门ID必须为数字，根部门的部门id默认为1
+     * 文件中存在、通讯录中也存在的成员，更新成员在文件中指定的字段值
+     * 文件中存在、通讯录中不存在的成员，执行添加操作
+     * 通讯录中存在、文件中不存在的成员，保持不变
+     * 成员字段更新规则：可自行添加扩展字段。文件中有指定的字段，以指定的字段值为准；文件中没指定的字段，不更新
+     * <p>
+     * <p>
+     * 增量更新成员
+     *
+     * @param weChatUsers
+     * @param applicationName
+     * @return AsyncJobResponse
+     */
+    public String asyncBatchUpdateUser(List<WeChatUser> weChatUsers, Boolean toInvite, CallbackData callbackData, String applicationName) {
+        return asyncHandleUser(weChatUsers, toInvite, callbackData, applicationName, ASYNC_BATCH_UPDATE_USER);
+    }
+
+    public String asyncBatchUpdateUser(List<WeChatUser> weChatUsers, Boolean toInvite, String applicationName) {
+        return asyncBatchUpdateUser(weChatUsers, toInvite, null, applicationName);
+    }
+
+    public String fullCoverUser(List<WeChatUser> weChatUsers, Boolean toInvite, CallbackData callbackData, String applicationName) {
+        return asyncHandleUser(weChatUsers, toInvite, callbackData, applicationName, FULL_COVER_USER);
+    }
+
+    public String fullCoverUser(List<WeChatUser> weChatUsers, Boolean toInvite, String applicationName) {
+        return asyncHandleUser(weChatUsers, toInvite, null, applicationName, FULL_COVER_USER);
+    }
+
+    private String asyncHandleUser(List<WeChatUser> weChatUsers, Boolean toInvite, CallbackData callbackData, String applicationName, String type) {
+        //上传待增量更新的文件
+        String fileName = "";
+        if (ASYNC_BATCH_UPDATE_USER.equals(type)) {
+            fileName = ASYNC_BATCH_UPDATE_USER_FILE;
+        } else if (FULL_COVER_USER.equals(type)) {
+            fileName = FULL_COVER_USER_FILE;
+        }
+        DiskFileItem fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file",
+                MediaType.TEXT_PLAIN.getType(), true, String.format(fileName, DateUtil.format(new Date(), "yyyyMMddhhmmss")));
+
+        try (OutputStream os = fileItem.getOutputStream()) {
+            if (CollectionUtils.isNotEmpty(weChatUsers)) {
+                IOUtils.write(ASYNC_BATCH_UPDATE_USER_FILE_TITLE, os);
+                /*
+                 * csv文件格式
+                 * 姓名,帐号,手机号,邮箱,所在部门,职位,性别,是否部门内领导,排序,别名,地址,座机,禁用,禁用项说明：(0-启用;1-禁用)
+                 * */
+                for (WeChatUser weChatUser : weChatUsers) {
+                    String line = buildUserLine(weChatUser);
+                    IOUtils.write(line, os);
+                }
+            }
+
+            //上传
+            MultipartFile multi = new CommonsMultipartFile(fileItem);
+            String mediaId = mediaService.uploadMaterial(multi, MediaService.FILE, applicationName);
+            AsyncJobRequest request = buildAsyncJobRequest(mediaId, toInvite, callbackData);
+            AsyncJobResponse response = null;
+            if (ASYNC_BATCH_UPDATE_USER.equals(type)) {
+                response = weChatClient.asyncBatchUpdateUser(request, applicationName);
+            } else if (FULL_COVER_USER.equals(type)) {
+                response = weChatClient.fullCoverUser(request, applicationName);
+            }
+            if (isSuccess(response)) {
+                return Objects.nonNull(response) ? response.getJobId() : "";
+            }
+        } catch (Exception e) {
+            logger.error("异步更新用户信息异常:{}，type: {}", applicationName, type, e);
+        }
+
+        return null;
+    }
+
+    private String buildUserLine(WeChatUser weChatUser) {
+        if (Objects.nonNull(weChatUser)) {
+            return StringUtils.defaultString(weChatUser.getName(), "") + "," +
+                    StringUtils.defaultString(weChatUser.getUserId(), "") + "," +
+                    StringUtils.defaultString(weChatUser.getMobile(), "") + "," +
+                    StringUtils.defaultString(weChatUser.getEmail(), "") + "," +
+                    getStringFromList(weChatUser.getDepartment()) + "," +
+                    StringUtils.defaultString(weChatUser.getPosition(), "") + "," +
+                    getStringFromList(weChatUser.getIsLeaderInDept()) + "," +
+                    getStringFromList(weChatUser.getOrder()) + "," +
+                    StringUtils.defaultString(weChatUser.getAlias(), "") + "," +
+                    StringUtils.defaultString(weChatUser.getAddress(), "") + "," +
+                    StringUtils.defaultString(weChatUser.getTelephone(), "") + "," +
+                    (weChatUser.getEnable() == null ? "" : String.valueOf(weChatUser.getEnable())) + ",\n";
+        }
+
+        return null;
+    }
+
+    private AsyncJobRequest buildAsyncJobRequest(String mediaId, Boolean toInvite, CallbackData callbackData) {
+        AsyncJobRequest request = new AsyncJobRequest();
+        request.setMediaId(mediaId);
+        request.setToInvite(toInvite);
+        request.setCallback(callbackData);
+        return request;
+    }
+
+    private String getStringFromList(List<Integer> list) {
+        StringBuilder result = new StringBuilder();
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (Integer data : list) {
+                result.append(data).append(";");
+            }
+            if (result.toString().endsWith(";")) {
+                result.deleteCharAt(result.length() - 1);
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * 全量覆盖部门
+     *
+     * @param departments
+     * @param callbackData
+     * @param applicationName
+     * @return
+     */
+    public String fullCoverDepartment(List<Department> departments, CallbackData callbackData, String applicationName) {
+        DiskFileItem fileItem = (DiskFileItem) new DiskFileItemFactory().createItem("file",
+                MediaType.TEXT_PLAIN.getType(), true, String.format(FULL_COVER_DEPARTMENT_FILE, DateUtil.format(new Date(), "yyyyMMddhhmmss")));
+
+        try (OutputStream os = fileItem.getOutputStream()) {
+            if (CollectionUtils.isNotEmpty(departments)) {
+                IOUtils.write(FULL_COVER_DEPARTMENT_FILE_TITLE, os);
+                /*
+                 * csv文件格式
+                 * 部门名称,部门ID,父部门ID,排序
+                 * */
+                for (Department department : departments) {
+                    String line = StringUtils.defaultString(department.getName(), "") + "," +
+                            (department.getId() == null ? "" : String.valueOf(department.getId())) + "," +
+                            (department.getParentId() == null ? "" : String.valueOf(department.getParentId())) + "," +
+                            (department.getOrder() == null ? "" : String.valueOf(department.getOrder())) + "\n";
+
+                    IOUtils.write(line, os);
+                }
+            }
+
+            //上传
+            MultipartFile multi = new CommonsMultipartFile(fileItem);
+            String mediaId = mediaService.uploadMaterial(multi, MediaService.FILE, applicationName);
+            AsyncJobRequest request = buildAsyncJobRequest(mediaId, null, callbackData);
+            AsyncJobResponse response = weChatClient.fullCoverDepartment(request, applicationName);
+
+            if (isSuccess(response)) {
+                return Objects.nonNull(response) ? response.getJobId() : "";
+            }
+        } catch (Exception e) {
+            logger.error("全量覆盖部门异常:{}", applicationName, e);
+        }
+
+        return null;
+    }
+
+    public String fullCoverDepartment(List<Department> departments, String applicationName) {
+        return fullCoverDepartment(departments, null, applicationName);
+    }
+
+
+    /**
+     * 获取job执行结果
+     *
+     * @param jobId
+     * @param applicationName
+     * @return
+     */
+    public AsyncJobResultResponse jobResult(String jobId, String applicationName) {
+        AsyncJobResultResponse resultResponse = null;
+        if (StringUtils.isNotEmpty(jobId)) {
+            resultResponse = weChatClient.jobResult(jobId, applicationName);
+            if (isSuccess(resultResponse)) {
+                logger.info("获取任务执行结果成功：{}", resultResponse);
+            }
+        }
+
+        return resultResponse;
     }
 }

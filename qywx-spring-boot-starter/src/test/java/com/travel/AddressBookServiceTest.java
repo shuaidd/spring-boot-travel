@@ -2,6 +2,7 @@ package com.travel;
 
 import com.travel.qywx.dto.Tag;
 import com.travel.qywx.dto.WeChatUser;
+import com.travel.qywx.response.AsyncJobResultResponse;
 import com.travel.qywx.response.QueryTagUserResponse;
 import com.travel.qywx.resquest.*;
 import com.travel.qywx.support.WeChatManager;
@@ -165,5 +166,49 @@ public class AddressBookServiceTest extends BaseTest {
         logger.info("标签总数：{}",tags.size());
     }
 
+    @Test
+    public void asyncBatchUpdateUser() {
+        WeChatUser weChatUser = new WeChatUser();
+        weChatUser.setAddress("浙江省西湖区跑马场路");
+        weChatUser.setAlias("flyBird");
+        weChatUser.setDepartment(Collections.singletonList(1));
+        weChatUser.setEmail("1325922038@qq.com");
+        weChatUser.setEnable(1);
+        weChatUser.setExternalPosition("UI视觉设计师");
+        weChatUser.setGender("1");
+        weChatUser.setMobile("15267897894");
+        weChatUser.setName("帅哒哒");
+        weChatUser.setUserId("13259220281");
+        weChatUser.setPosition("UI视觉设计师");
+        String jobId = weChatManager.addressBookService().asyncBatchUpdateUser(Collections.singletonList(weChatUser),false,"address-book");
+        logger.info("jobId：{}",jobId);
+    }
+
+    @Test
+    public void fullCoverUser() {
+        WeChatUser weChatUser = new WeChatUser();
+        weChatUser.setAddress("浙江省西湖区跑马场路");
+        weChatUser.setAlias("flyBird");
+        weChatUser.setDepartment(Collections.singletonList(1));
+        weChatUser.setEmail("1325922038@qq.com");
+        weChatUser.setEnable(1);
+        weChatUser.setExternalPosition("UI视觉设计师");
+        weChatUser.setGender("1");
+        weChatUser.setMobile("15267897894");
+        weChatUser.setName("帅哒哒");
+        weChatUser.setUserId("13259220281");
+        weChatUser.setPosition("UI视觉设计师");
+        String jobId = weChatManager.addressBookService().fullCoverUser(Collections.singletonList(weChatUser),false,"address-book");
+        logger.info("jobId：{}",jobId);
+    }
+
+    @Test
+    public void  jobResult(){
+        AsyncJobResultResponse resultResponse = weChatManager.addressBookService().jobResult("3_1554687941_74556","address-book");
+        logger.info("job执行结果：{}",resultResponse);
+
+        AsyncJobResultResponse resultResponse2 = weChatManager.addressBookService().jobResult("2_1554689484_959292","address-book");
+        logger.info("job执行结果：{}",resultResponse2);
+    }
 
 }

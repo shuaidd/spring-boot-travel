@@ -35,17 +35,23 @@ public abstract class AbstractBaseService {
     protected WeChatConfigurationProperties properties;
 
     boolean isSuccess(AbstractBaseResponse baseResponse) {
-        if (ErrorCode.ERROR_CODE_0.getErrorCode().equals(baseResponse.getErrCode().toString())) {
-            return true;
+        if (Objects.nonNull(baseResponse)) {
+            if (ErrorCode.ERROR_CODE_0.getErrorCode().equals(baseResponse.getErrCode().toString())) {
+                return true;
+            } else {
+                ErrorCode errorCode = ErrorCode.errorCode(baseResponse.getErrCode());
+                logger.error("企业微信调用异常：errorCode[{}],msg:[{}],response:{}", errorCode.getErrorCode(), errorCode.getErrorDesc(), baseResponse.getErrMsg());
+                throw new WeChatException(errorCode.getErrorDesc(), errorCode);
+            }
         } else {
-            ErrorCode errorCode = ErrorCode.errorCode(baseResponse.getErrCode());
-            logger.error("企业微信调用异常：errorCode[{}],msg:[{}]", errorCode.getErrorCode(), errorCode.getErrorDesc());
-            throw new WeChatException(errorCode.getErrorDesc(),errorCode);
+            return false;
         }
+
     }
 
     /**
      * 获取应用密匙
+     *
      * @param applicationName
      * @return
      */
@@ -59,9 +65,9 @@ public abstract class AbstractBaseService {
                 }
             }
         }
-        if (StringUtils.isEmpty(secret)){
+        if (StringUtils.isEmpty(secret)) {
             //不存在的应用 则抛出异常
-            throw new WeChatException(applicationName+"应用不存在密匙");
+            throw new WeChatException(applicationName + "应用不存在密匙");
         }
 
         return secret;
