@@ -13,6 +13,8 @@
     <module>travel-common</module>
       <module>travel-starter</module>
       <module>qywx-spring-boot-starter</module>
+    <module>spring-travel</module>
+      <module>spring-web-flow</module>
   </modules>
 
   <name>spring-boot-travel</name>
@@ -119,4 +121,11 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>localRepository</id>
+      <url>file:/Users/shuaidongdong/.m2/repository</url>
+    </repository>
+  </distributionManagement>
 </project>

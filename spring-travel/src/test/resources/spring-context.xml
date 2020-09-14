@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder location="classpath:db.properties"/>
+    <bean id="messageService" class="com.travel.MessageServiceImpl" init-method="init" lazy-init="true" depends-on="testDependOn">
+        <property name="name" value="${img.name}"/>
+        <replaced-method name="sayHi" replacer="testMethodReplacer"/>
+    </bean>
+
+    <bean id="lookUpBean" class="com.travel.LookUpBean">
+        <lookup-method name="getBean" bean="messageService"/>
+    </bean>
+
+    <bean id="testMethodReplacer" class="com.travel.TestMethodReplacer"/>
+
+    <bean id="testDependOn" class="com.travel.TestDependOn" init-method="init"/>
+</beans>
