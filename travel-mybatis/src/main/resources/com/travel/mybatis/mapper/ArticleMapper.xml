@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.travel.mybatis.mapper.ArticleMapper">
+
+    <sql id="baseColumnSql" >
+        <bind name="name" value="111"/>
+        id,title
+    </sql>
+    <select id="selectAll" resultType="com.travel.mybatis.DO.Article" parameterType="Article">
+        select <include refid="baseColumnSql">
+        <property name="name" value="sdsds"/>
+    </include> from article
+    </select>
+
+    <resultMap id="baseMap" type="Article">
+        <id column="id" javaType="Long" jdbcType="BIGINT"/>
+        <association property="author" column="author_id" jdbcType="BIGINT" javaType="Long" select="selectAuthor"/>
+        <collection property="posts" ofType="Post" column="id"  jdbcType="BIGINT" select="selectPost"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="baseMap">
+        select * from article where id = #{id}
+    </select>
+
+    <select id="selectAuthor" parameterType="long" resultType="Author">
+        select * from author where id = #{id}
+    </select>
+
+    <select id="selectPost" resultType="com.travel.mybatis.DO.Post">
+        select * from post where id = #{id}
+    </select>
+
+    <sql id="likeSql">
+        <bind name="title" value="'%' + title + '%'"/>
+        ${con} title like #{title}
+    </sql>
+    <select id="selectForTitle" resultType="com.travel.mybatis.DO.Article">
+        select * from article
+        <include refid="likeSql">
+          <property name="con" value="where"/>
+        </include>
+    </select>
+</mapper>
