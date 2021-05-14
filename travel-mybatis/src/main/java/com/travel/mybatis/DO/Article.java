@@ -47,6 +47,7 @@ public class Article implements Serializable {
     }
 
     public void setPosts(List<Post> posts) {
+        System.out.println("加载了额");
         this.posts = posts;
     }
 

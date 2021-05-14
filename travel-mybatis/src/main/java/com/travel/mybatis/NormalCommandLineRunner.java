@@ -43,7 +43,8 @@ public class NormalCommandLineRunner implements CommandLineRunner {
             articles = articleMapper.selectAll();
             logger.info("测试普通查询--第二次---{}", articles);
             Article article = articleMapper.selectById(1L);
-            logger.info("{}",article);
+            logger.info("{}",article.getId());
+            logger.info("{}",article.getPosts());
             articleMapper.selectForTitle("ww");
         }
     }

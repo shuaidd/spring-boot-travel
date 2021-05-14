@@ -16,9 +16,9 @@
     </select>
 
     <resultMap id="baseMap" type="Article">
-        <id column="id" javaType="Long" jdbcType="BIGINT"/>
-        <association property="author" column="author_id" jdbcType="BIGINT" javaType="Long" select="selectAuthor"/>
-        <collection property="posts" ofType="Post" column="id"  jdbcType="BIGINT" select="selectPost"/>
+        <id column="id" javaType="Long" property="id" jdbcType="BIGINT"/>
+        <association property="author" column="author_id" fetchType="lazy" jdbcType="BIGINT" javaType="Long" select="selectAuthor"/>
+        <collection property="posts" ofType="Post" fetchType="lazy" column="id" jdbcType="BIGINT" select="selectPost"/>
     </resultMap>
 
     <select id="selectById" resultMap="baseMap">
