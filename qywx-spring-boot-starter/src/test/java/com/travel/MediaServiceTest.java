@@ -1,6 +1,6 @@
 package com.travel;
 
-import com.travel.qywx.service.MediaService;
+import com.github.shuaidd.service.MediaService;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

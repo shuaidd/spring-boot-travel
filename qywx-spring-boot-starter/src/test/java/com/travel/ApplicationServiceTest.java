@@ -1,10 +1,10 @@
 package com.travel;
 
-import com.travel.qywx.dto.ApplicationButton;
-import com.travel.qywx.enums.ButtonType;
-import com.travel.qywx.response.ApplicationButtonResponse;
-import com.travel.qywx.response.WeChatApplicationResponse;
-import com.travel.qywx.resquest.ApplicationButtonRequest;
+import com.github.shuaidd.dto.tool.ApplicationButton;
+import com.github.shuaidd.enums.ButtonType;
+import com.github.shuaidd.response.application.ApplicationButtonResponse;
+import com.github.shuaidd.response.application.WeChatApplicationResponse;
+import com.github.shuaidd.resquest.application.ApplicationButtonRequest;
 import org.junit.Test;
 
 import java.util.Collections;

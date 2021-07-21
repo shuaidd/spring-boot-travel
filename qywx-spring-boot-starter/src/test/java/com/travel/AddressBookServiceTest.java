@@ -1,10 +1,10 @@
 package com.travel;
 
-import com.travel.qywx.dto.Tag;
-import com.travel.qywx.dto.WeChatUser;
-import com.travel.qywx.response.AsyncJobResultResponse;
-import com.travel.qywx.response.QueryTagUserResponse;
-import com.travel.qywx.resquest.*;
+import com.github.shuaidd.dto.addressbook.Tag;
+import com.github.shuaidd.dto.addressbook.WeChatUser;
+import com.github.shuaidd.response.addressbook.AsyncJobResultResponse;
+import com.github.shuaidd.response.addressbook.QueryTagUserResponse;
+import com.github.shuaidd.resquest.addressbook.*;
 import org.junit.Test;
 
 import java.util.Collections;

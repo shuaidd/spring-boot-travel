@@ -1,8 +1,6 @@
 package com.travel;
 
-import com.travel.qywx.support.WeChatManager;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 描述

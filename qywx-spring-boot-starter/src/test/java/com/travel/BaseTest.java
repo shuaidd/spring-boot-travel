@@ -1,6 +1,6 @@
 package com.travel;
 
-import com.travel.qywx.support.WeChatManager;
+import com.github.shuaidd.support.WeChatManager;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

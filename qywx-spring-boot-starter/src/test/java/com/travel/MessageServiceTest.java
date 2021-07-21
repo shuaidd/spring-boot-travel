@@ -1,11 +1,11 @@
 package com.travel;
 
-import com.travel.qywx.dto.MsgText;
-import com.travel.qywx.enums.MsgType;
-import com.travel.qywx.resquest.CreateAppChatRequest;
-import com.travel.qywx.resquest.SendAppChatRequest;
-import com.travel.qywx.resquest.SendMessageRequest;
-import com.travel.qywx.resquest.UpdateAppChatRequest;
+import com.github.shuaidd.dto.message.MsgText;
+import com.github.shuaidd.enums.MsgType;
+import com.github.shuaidd.resquest.message.CreateAppChatRequest;
+import com.github.shuaidd.resquest.message.SendAppChatRequest;
+import com.github.shuaidd.resquest.message.SendMessageRequest;
+import com.github.shuaidd.resquest.message.UpdateAppChatRequest;
 import org.junit.Test;
 
 import java.util.Arrays;

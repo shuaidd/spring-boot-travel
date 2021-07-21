@@ -1,6 +1,6 @@
 package com.travel;
 
-import com.travel.qywx.autoconfigure.EnableWeChat;
+import com.github.shuaidd.autoconfigure.EnableWeChat;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
