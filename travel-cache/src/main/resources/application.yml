@@ -1,6 +1,6 @@
 spring:
   cache:
     caffeine:
-      spec: "maximumSize=500,expireAfterAccess=600s"
+      spec: "maximumSize=500,expireAfterWrite=2s"
     type: caffeine
     cache-names: cache1

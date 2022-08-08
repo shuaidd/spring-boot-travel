@@ -30,5 +30,8 @@ public class CacheCommandLineRunner implements CommandLineRunner {
         System.out.println(data);
         data = caffeineService.getData("ddshuai");
         System.out.println(data);
+        Thread.sleep(2100);
+        data = caffeineService.getData("ddshuai");
+        System.out.println(data);
     }
 }

@@ -17,6 +17,7 @@
       <module>spring-web-flow</module>
     <module>travel-mybatis</module>
     <module>travel-cache</module>
+      <module>travel-web</module>
   </modules>
 
   <name>spring-boot-travel</name>

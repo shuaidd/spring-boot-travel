@@ -1,0 +1,8 @@
+{
+  "serverUrl": "http://{{server}}",
+  "outPath": "src/main/resources/public/doc",
+  "allInOne": false,
+  "coverOld": true,
+  "projectName": "应用接口文档",
+  "inlineEnum": false
+}
