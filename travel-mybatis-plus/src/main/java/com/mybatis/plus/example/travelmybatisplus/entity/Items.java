@@ -1,5 +1,6 @@
 package com.mybatis.plus.example.travelmybatisplus.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ import java.util.Date;
 @Data
 @TableName("t_fl_items")
 public class Items {
+    @TableId
     private String itemId;
     private String itemCode;
     private String itemName;
