@@ -1,6 +1,7 @@
 package com.mybatis.plus.example.travelmybatisplus;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.mybatis.plus.example.travelmybatisplus.entity.User;
 import com.mybatis.plus.example.travelmybatisplus.mapper.ItemMapper;
 import com.mybatis.plus.example.travelmybatisplus.mapper.UserMapper;
@@ -14,9 +15,11 @@ import java.util.List;
 @SpringBootTest
 public class SampleTest {
 
+    @SuppressWarnings("all")
     @Autowired
     private UserMapper userMapper;
 
+    @SuppressWarnings("all")
     @Autowired
     private ItemMapper itemMapper;
 
@@ -54,5 +57,12 @@ public class SampleTest {
             wrapper1.eq("id",1).likeRight("email","test111");
         });
         userMapper.selectList(wrapper);
+    }
+
+    @Test
+    public void selectByPage() {
+        Page<User> page = new Page<>(1,2);
+        userMapper.selectPage(page,null);
+        System.out.println(page);
     }
 }
