@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="pojo2Bean" scope="prototype" name="pojo2Bean2 pojo2Bean3 pojo2Bean4" class="org.example.travel.Pojo2Bean"/>
+
+    <bean id="clientService"
+          class="org.example.travel.factorybean.ClientService"
+          factory-method="createInstance"/>
+
+    <bean id="serviceLocator" class="org.example.travel.factorybean.DefaultServiceLocator">
+        <!-- inject any dependencies required by this locator bean -->
+    </bean>
+
+    <bean id="clientServiceImpl"
+          factory-bean="serviceLocator"
+          factory-method="createClientServiceInstance"/>
+
+    <bean id="accountServiceImpl"
+          factory-bean="serviceLocator"
+          factory-method="createAccountServiceInstance"/>
+
+    <bean id="testBean" class="org.example.travel.factorybean.TestFactoryBean">
+    </bean>
+</beans>
